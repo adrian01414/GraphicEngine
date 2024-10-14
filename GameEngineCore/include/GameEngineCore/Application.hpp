@@ -1,9 +1,6 @@
 #pragma once
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <spdlog/spdlog.h>
-#include <iostream>
+#include <memory>
 
 namespace GameEngine {
     class Application
@@ -20,6 +17,8 @@ namespace GameEngine {
         virtual int start(unsigned int window_width, unsigned int window_height, const char* title);
 
         virtual void on_update(){}
+
     private:
+        std::unique_ptr<class Window> m_window;
     };
 }

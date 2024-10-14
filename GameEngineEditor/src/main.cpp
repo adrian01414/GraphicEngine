@@ -5,7 +5,7 @@
 class MyApp : public GameEngine::Application {
     public:
     virtual void on_update() override {
-        std::cout << "Update frame: " << frame++ << std::endl;
+        //std::cout << "Update frame: " << frame++ << std::endl;
     }
 
     private:

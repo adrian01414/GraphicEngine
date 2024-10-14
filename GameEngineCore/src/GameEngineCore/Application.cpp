@@ -1,68 +1,30 @@
 #include "GameEngineCore/Application.hpp"
+#include "GameEngineCore/Debug.hpp"
+#include "GameEngineCore/Window.hpp"
+
+#include <memory>
 
 namespace GameEngine
 {
     Application::Application()
     {
-        spdlog::info("Welcome to spdlog!");
-        spdlog::error("Some error message with arg: {}", 1);
-
-        spdlog::warn("Easy padding in numbers like {:08d}", 12);
-        spdlog::critical("Support for int: {0:d};  hex: {0:x};  oct: {0:o}; bin: {0:b}", 42);
-        spdlog::info("Support for floats {:03.2f}", 1.23456);
-        spdlog::info("Positional args are {1} {0}..", "too", "supported");
-        spdlog::info("{:<30}", "left aligned");
-
-        spdlog::set_level(spdlog::level::debug); // Set global log level to debug
-        spdlog::debug("This message should be displayed..");
-
-        // change log pattern
-        spdlog::set_pattern("[%H:%M:%S %z] [%n] [%^---%L---%$] [thread %t] %v");
-
-        // Compile time log levels
-        // Note that this does not change the current log level, it will only
-        // remove (depending on SPDLOG_ACTIVE_LEVEL) the call on the release code.
-        SPDLOG_TRACE("Some trace message with param {}", 42);
-        SPDLOG_DEBUG("Some debug message");
+        
     }
 
     Application::~Application()
     {
+
     }
 
     int Application::start(unsigned int window_width, unsigned int window_height, const char *title)
     {
-        GLFWwindow *window;
+        m_window = std::make_unique<Window>(title, window_width, window_height);
 
-        if (!glfwInit())
-            return -1;
-
-        window = glfwCreateWindow(window_width, window_height, title, NULL, NULL);
-        if (!window)
-        {
-            glfwTerminate();
-            return -1;
-        }
-
-        glfwMakeContextCurrent(window);
-
-        if (!gladLoadGL())
-        {
-            return -1;
-        }
-
-        while (!glfwWindowShouldClose(window))
-        {
-            glClear(GL_COLOR_BUFFER_BIT);
-
-            glfwSwapBuffers(window);
-
-            glfwPollEvents();
-
+        while(true){
+            m_window->on_update();
             on_update();
         }
 
-        glfwTerminate();
         return 0;
     }
 }
