@@ -8,6 +8,7 @@ set(
     ENGINE_PUBLIC_INCLUDES
     include/GameEngineCore/Application.hpp
     include/GameEngineCore/Debug.hpp
+    include/GameEngineCore/Event.hpp
 )
 set(
     ENGINE_PRIVATE_INCLUDES
