@@ -43,4 +43,38 @@ target_link_libraries(
     glfw
     glad
     spdlog
+    imgui
+)
+
+set(
+    IMGUI_INCLUDES
+    ../external/imgui/imgui.h
+    ../external/imgui/backends/imgui_impl_glfw.h
+    ../external/imgui/backends/imgui_impl_opengl3.h
+)
+
+set(
+    IMGUI_SOURCES
+    ../external/imgui/imgui.cpp
+    ../external/imgui/backends/imgui_impl_glfw.cpp
+    ../external/imgui/backends/imgui_impl_opengl3.cpp
+    ../external/imgui/imgui_demo.cpp
+    ../external/imgui/imgui_draw.cpp
+    ../external/imgui/imgui_tables.cpp
+    ../external/imgui/imgui_widgets.cpp
+)
+
+add_library(
+    imgui STATIC
+    ${IMGUI_INCLUDES}
+    ${IMGUI_SOURCES}
+)
+
+target_include_directories( imgui PUBLIC includes ../external )
+target_include_directories( imgui PUBLIC includes ../external/imgui )
+
+target_link_libraries(
+    imgui
+    glad
+    glfw
 )

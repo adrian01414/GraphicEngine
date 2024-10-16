@@ -22,13 +22,13 @@ namespace GameEngine
         
         m_event_dispatcher.add_event_listener<EventMouseMoved>(
             [](EventMouseMoved &event) {
-                LOG_INFO("Mouse moved to x: {0}, y: {1}", event.x, event.y);
+                //LOG_INFO("Mouse moved to x: {0}, y: {1}", event.x, event.y);
             }
         );
 
         m_event_dispatcher.add_event_listener<EventWindowResized>(
             [](EventWindowResized &event) {
-                LOG_INFO("Window resized to width: {0}, height: {1}", event.width, event.height);
+                //LOG_INFO("Window resized to width: {0}, height: {1}", event.width, event.height);
             }
         );
 
