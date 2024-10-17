@@ -13,11 +13,15 @@ set(
 set(
     ENGINE_PRIVATE_INCLUDES
     src/GameEngineCore/Window.hpp
+    src/GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp
+    src/GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp
 )
 set(
     ENGINE_PRIVATE_SOURCES
     src/GameEngineCore/Application.cpp
     src/GameEngineCore/Window.cpp
+    src/GameEngineCore/Rendering/OpenGL/ShaderProgram.cpp
+    src/GameEngineCore/Rendering/OpenGL/VertexBuffer.cpp
 )
 
 add_library(
