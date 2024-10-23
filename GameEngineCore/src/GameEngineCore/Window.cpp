@@ -3,6 +3,7 @@
 #include "GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
 #include "GameEngineCore/Rendering/OpenGL/VertexArray.hpp"
+#include "GameEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,10 +15,14 @@
 
 namespace GameEngine
 {
-    GLfloat positions_colors[] = {
-        0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
+    GLfloat positions_colors2[] = {
+        -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f,
+        0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f};
+
+    GLuint indices[] = {
+        0, 1, 2, 3, 2, 1};
 
     const char *vertex_shader =
         "#version 460\n"
@@ -39,7 +44,8 @@ namespace GameEngine
 
     std::unique_ptr<ShaderProgram> p_shader_program;
     std::unique_ptr<VertexBuffer> p_positions_colors_vbo;
-    std::unique_ptr<VertexArray> p_vao_1buffer;
+    std::unique_ptr<IndexBuffer> p_index_buffer;
+    std::unique_ptr<VertexArray> p_vao;
 
     static bool s_GLfW_initialized = false;
 
@@ -131,14 +137,17 @@ namespace GameEngine
 
         BufferLayout buffer_layout_1vec3{
             ShaderDataType::Float3};
+
         BufferLayout buffer_layout_2vec3{
             ShaderDataType::Float3,
             ShaderDataType::Float3};
 
-        p_vao_1buffer = std::make_unique<VertexArray>();
-        p_positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors, sizeof(positions_colors), buffer_layout_2vec3);
+        p_vao = std::make_unique<VertexArray>();
+        p_positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors2, sizeof(positions_colors2), buffer_layout_2vec3);
+        p_index_buffer = std::make_unique<IndexBuffer>(indices, sizeof(indices) / sizeof(GLuint));
 
-        p_vao_1buffer->add_buffer(*p_positions_colors_vbo);
+        p_vao->add_vertex_buffer(*p_positions_colors_vbo);
+        p_vao->set_index_buffer(*p_index_buffer);
         return 0;
     }
 
@@ -157,15 +166,14 @@ namespace GameEngine
 
         // Triangle color window
         ImGui::Begin("Triangle color");
-        ImGui::ColorEdit3("color1", positions_colors + 3);
-        ImGui::ColorEdit3("color2", positions_colors + 9);
-        ImGui::ColorEdit3("color3", positions_colors + 15);
+        // ImGui::ColorEdit3("color1", positions_colors + 3);
+        // ImGui::ColorEdit3("color2", positions_colors + 9);
+        // ImGui::ColorEdit3("color3", positions_colors + 15);
 
         p_shader_program->bind();
-        p_vao_1buffer->bind();
-        //p_positions_colors_vbo->update_buffer(positions_colors, sizeof(positions_colors));
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        p_vao->bind();
+        // p_positions_colors_vbo->update_buffer(positions_colors, sizeof(positions_colors));
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(p_vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
 
         ImGui::End();
         //
