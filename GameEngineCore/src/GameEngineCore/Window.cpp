@@ -2,6 +2,7 @@
 #include "GameEngineCore/Debug.hpp"
 #include "GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
 #include "GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+#include "GameEngineCore/Rendering/OpenGL/VertexArray.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -13,19 +14,12 @@
 
 namespace GameEngine
 {
-    GLfloat points[] = {
-        0.0f,  0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        -0.5f, -0.5f, 0.0f
-    };
+    GLfloat positions_colors[] = {
+        0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-    GLfloat colors[] = {
-        1.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 1.0f
-    };
-
-    const char* vertex_shader =
+    const char *vertex_shader =
         "#version 460\n"
         "layout(location = 0) in vec3 vertex_position;"
         "layout(location = 1) in vec3 vertex_color;"
@@ -35,7 +29,7 @@ namespace GameEngine
         "   gl_Position = vec4(vertex_position, 1.0);"
         "}";
 
-    const char* fragment_shader =
+    const char *fragment_shader =
         "#version 460\n"
         "in vec3 color;"
         "out vec4 frag_color;"
@@ -44,9 +38,8 @@ namespace GameEngine
         "}";
 
     std::unique_ptr<ShaderProgram> p_shader_program;
-    std::unique_ptr<VertexBuffer> p_points_vbo;
-    std::unique_ptr<VertexBuffer> p_colors_vbo;
-    GLuint vao;
+    std::unique_ptr<VertexBuffer> p_positions_colors_vbo;
+    std::unique_ptr<VertexArray> p_vao_1buffer;
 
     static bool s_GLfW_initialized = false;
 
@@ -68,14 +61,16 @@ namespace GameEngine
 
     int Window::init()
     {
-        if(!s_GLfW_initialized){
-            if (!glfwInit()){
+        if (!s_GLfW_initialized)
+        {
+            if (!glfwInit())
+            {
                 LOG_CRITICAL("Failed to initialize GLFW");
                 return -1;
             }
-            s_GLfW_initialized= true;
+            s_GLfW_initialized = true;
         }
-        
+
         m_window = glfwCreateWindow(m_data.width, m_data.height, m_data.title.c_str(), nullptr, nullptr);
         if (!m_window)
         {
@@ -94,59 +89,56 @@ namespace GameEngine
 
         glfwSetWindowUserPointer(m_window, &m_data);
 
-        glfwSetWindowSizeCallback(m_window, 
-            [](GLFWwindow* window, int width, int height){
-                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-                data.height = height;
-                data.width = width;
+        glfwSetWindowSizeCallback(m_window,
+                                  [](GLFWwindow *window, int width, int height)
+                                  {
+                                      WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+                                      data.height = height;
+                                      data.width = width;
 
-                EventWindowResized event(width, height);
-                data.event_callback(event);
-            }
-        );
+                                      EventWindowResized event(width, height);
+                                      data.event_callback(event);
+                                  });
 
         glfwSetCursorPosCallback(m_window,
-            [](GLFWwindow* window, double x, double y){
-                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+                                 [](GLFWwindow *window, double x, double y)
+                                 {
+                                     WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-                EventMouseMoved event(x, y);
-                data.event_callback(event);
-            }
-        );
+                                     EventMouseMoved event(x, y);
+                                     data.event_callback(event);
+                                 });
 
         glfwSetWindowCloseCallback(m_window,
-            [](GLFWwindow* window){
-                WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-                EventWindowClose event;
-                data.event_callback(event);
-            }
-        );
+                                   [](GLFWwindow *window)
+                                   {
+                                       WindowData &data = *static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+                                       EventWindowClose event;
+                                       data.event_callback(event);
+                                   });
 
         glfwSetFramebufferSizeCallback(m_window,
-            [](GLFWwindow* window, int width, int height){
-                glViewport(0, 0, width, height);
-            }
-        );
+                                       [](GLFWwindow *window, int width, int height)
+                                       {
+                                           glViewport(0, 0, width, height);
+                                       });
 
         p_shader_program = std::make_unique<ShaderProgram>(vertex_shader, fragment_shader);
-        if(!p_shader_program->isCompiled()){
+        if (!p_shader_program->isCompiled())
+        {
             return false;
         }
 
-        p_points_vbo = std::make_unique<VertexBuffer>(points, sizeof(points));
-        p_colors_vbo = std::make_unique<VertexBuffer>(colors, sizeof(colors));
+        BufferLayout buffer_layout_1vec3{
+            ShaderDataType::Float3};
+        BufferLayout buffer_layout_2vec3{
+            ShaderDataType::Float3,
+            ShaderDataType::Float3};
 
-        glGenVertexArrays(1, &vao);
-        glBindVertexArray(vao);
+        p_vao_1buffer = std::make_unique<VertexArray>();
+        p_positions_colors_vbo = std::make_unique<VertexBuffer>(positions_colors, sizeof(positions_colors), buffer_layout_2vec3);
 
-        glEnableVertexAttribArray(0);
-        p_points_vbo->bind();
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
-        glEnableVertexAttribArray(1);
-        p_colors_vbo->bind();
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-
+        p_vao_1buffer->add_buffer(*p_positions_colors_vbo);
         return 0;
     }
 
@@ -155,19 +147,7 @@ namespace GameEngine
         glClearColor(m_background_color[0], m_background_color[1], m_background_color[2], m_background_color[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        //
-        p_colors_vbo = std::make_unique<VertexBuffer>(colors, sizeof(colors));
-
-        glEnableVertexAttribArray(1);
-        p_colors_vbo->bind();
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        //
-        
-        p_shader_program->bind();
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-
-        ImGuiIO& io = ImGui::GetIO();
+        ImGuiIO &io = ImGui::GetIO();
         io.DisplaySize.x = static_cast<float>(get_width());
         io.DisplaySize.y = static_cast<float>(get_height());
 
@@ -175,11 +155,18 @@ namespace GameEngine
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //Test window
+        // Triangle color window
         ImGui::Begin("Triangle color");
-        ImGui::ColorEdit3("color1", colors);
-        ImGui::ColorEdit3("color2", colors + 3);
-        ImGui::ColorEdit3("color3", colors + 6);
+        ImGui::ColorEdit3("color1", positions_colors + 3);
+        ImGui::ColorEdit3("color2", positions_colors + 9);
+        ImGui::ColorEdit3("color3", positions_colors + 15);
+
+        p_shader_program->bind();
+        p_vao_1buffer->bind();
+        //p_positions_colors_vbo->update_buffer(positions_colors, sizeof(positions_colors));
+
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
         ImGui::End();
         //
 

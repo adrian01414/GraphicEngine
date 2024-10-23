@@ -15,6 +15,7 @@ set(
     src/GameEngineCore/Window.hpp
     src/GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp
     src/GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp
+    src/GameEngineCore/Rendering/OpenGL/VertexArray.hpp
 )
 set(
     ENGINE_PRIVATE_SOURCES
@@ -22,6 +23,7 @@ set(
     src/GameEngineCore/Window.cpp
     src/GameEngineCore/Rendering/OpenGL/ShaderProgram.cpp
     src/GameEngineCore/Rendering/OpenGL/VertexBuffer.cpp
+    src/GameEngineCore/Rendering/OpenGL/VertexArray.cpp
 )
 
 add_library(
