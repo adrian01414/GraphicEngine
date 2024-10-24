@@ -156,6 +156,12 @@ namespace GameEngine
         glClearColor(m_background_color[0], m_background_color[1], m_background_color[2], m_background_color[3]);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        p_shader_program->bind();
+        p_vao->bind();
+        p_positions_colors_vbo->update_buffer(positions_colors2, sizeof(positions_colors2));
+        
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(p_vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
+
         ImGuiIO &io = ImGui::GetIO();
         io.DisplaySize.x = static_cast<float>(get_width());
         io.DisplaySize.y = static_cast<float>(get_height());
@@ -164,19 +170,21 @@ namespace GameEngine
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Triangle color window
-        ImGui::Begin("Triangle color");
-        // ImGui::ColorEdit3("color1", positions_colors + 3);
-        // ImGui::ColorEdit3("color2", positions_colors + 9);
-        // ImGui::ColorEdit3("color3", positions_colors + 15);
-
-        p_shader_program->bind();
-        p_vao->bind();
-        // p_positions_colors_vbo->update_buffer(positions_colors, sizeof(positions_colors));
-        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(p_vao->get_indices_count()), GL_UNSIGNED_INT, nullptr);
-
+        // Square position window
+        ImGui::Begin("Square position");
+        ImGui::SliderFloat2("position1", positions_colors2, -1.0f, 1.0f);
+        ImGui::SliderFloat2("position2", positions_colors2 + 6, -1.0f, 1.0f);
+        ImGui::SliderFloat2("position3", positions_colors2 + 12, -1.0f, 1.0f);
+        ImGui::SliderFloat2("position4", positions_colors2 + 18, -1.0f, 1.0f);
         ImGui::End();
-        //
+
+        // Square color window
+        ImGui::Begin("Square color");
+        ImGui::ColorEdit3("color1", positions_colors2 + 3);
+        ImGui::ColorEdit3("color2", positions_colors2 + 9);
+        ImGui::ColorEdit3("color3", positions_colors2 + 15);
+        ImGui::ColorEdit3("color4", positions_colors2 + 21);
+        ImGui::End();
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

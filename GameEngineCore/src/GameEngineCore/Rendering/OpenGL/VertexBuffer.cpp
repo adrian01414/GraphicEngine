@@ -121,6 +121,7 @@ namespace GameEngine
     }
     void VertexBuffer::update_buffer(const void *data, const size_t size)
     {
-        glBufferSubData(GL_ARRAY_BUFFER, 3, size, data);
+        glBindBuffer(GL_ARRAY_BUFFER, m_id);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
     }
 }
