@@ -2,7 +2,7 @@
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
 
-namespace GameEngine {
+namespace GraphicsEngine {
     class VertexArray {
     public:
         VertexArray();

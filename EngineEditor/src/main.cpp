@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
-#include <GameEngineCore/Application.hpp>
+#include <EngineCore/Application.hpp>
 
-class MyApp : public GameEngine::Application {
+class MyApp : public GraphicsEngine::Application {
     public:
     virtual void on_update() override {
         //std::cout << "Update frame: " << frame++ << std::endl;

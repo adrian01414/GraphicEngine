@@ -3,7 +3,7 @@
 #include <functional>
 #include <array>
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     enum class EventType
     {

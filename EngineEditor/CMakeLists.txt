@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 
-set(EDITOR_PROJECT_NAME GameEngineEditor)
+set(EDITOR_PROJECT_NAME EngineEditor)
 
 add_executable(
     ${EDITOR_PROJECT_NAME}
@@ -9,7 +9,7 @@ add_executable(
 
 target_link_libraries(
     ${EDITOR_PROJECT_NAME}
-    GameEngineCore
+    EngineCore
 )
 
 target_compile_features(

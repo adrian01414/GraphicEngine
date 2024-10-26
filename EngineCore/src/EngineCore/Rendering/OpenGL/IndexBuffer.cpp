@@ -1,8 +1,8 @@
 #include "IndexBuffer.hpp"
-#include "GameEngineCore/Debug.hpp"
+#include "EngineCore/Debug.hpp"
 #include <glad/glad.h>
 
-namespace GameEngine {
+namespace GraphicsEngine {
     constexpr GLenum usage_to_GLenum(const VertexBuffer::EUsage usage)
     {
         switch (usage)

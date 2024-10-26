@@ -1,9 +1,9 @@
 #include "VertexBuffer.hpp"
-#include "GameEngineCore/Debug.hpp"
+#include "EngineCore/Debug.hpp"
 #include <glad/glad.h>
 #include <memory>
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     constexpr unsigned int shader_data_type_to_components_count(const ShaderDataType type)
     {

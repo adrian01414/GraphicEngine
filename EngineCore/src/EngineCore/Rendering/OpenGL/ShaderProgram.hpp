@@ -1,6 +1,6 @@
 #pragma once
 
-namespace GameEngine {
+namespace GraphicsEngine {
     class ShaderProgram
     {
     public:

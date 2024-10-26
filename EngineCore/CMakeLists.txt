@@ -2,30 +2,30 @@ cmake_minimum_required (VERSION 3.8)
 
 set(
     ENGINE_PROJECT_NAME 
-    GameEngineCore
+    EngineCore
 )
 set(
     ENGINE_PUBLIC_INCLUDES
-    include/GameEngineCore/Application.hpp
-    include/GameEngineCore/Debug.hpp
-    include/GameEngineCore/Event.hpp
+    include/EngineCore/Application.hpp
+    include/EngineCore/Debug.hpp
+    include/EngineCore/Event.hpp
 )
 set(
     ENGINE_PRIVATE_INCLUDES
-    src/GameEngineCore/Window.hpp
-    src/GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp
-    src/GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp
-    src/GameEngineCore/Rendering/OpenGL/VertexArray.hpp
-    src/GameEngineCore/Rendering/OpenGL/IndexBuffer.hpp
+    src/EngineCore/Window.hpp
+    src/EngineCore/Rendering/OpenGL/ShaderProgram.hpp
+    src/EngineCore/Rendering/OpenGL/VertexBuffer.hpp
+    src/EngineCore/Rendering/OpenGL/VertexArray.hpp
+    src/EngineCore/Rendering/OpenGL/IndexBuffer.hpp
 )
 set(
     ENGINE_PRIVATE_SOURCES
-    src/GameEngineCore/Application.cpp
-    src/GameEngineCore/Window.cpp
-    src/GameEngineCore/Rendering/OpenGL/ShaderProgram.cpp
-    src/GameEngineCore/Rendering/OpenGL/VertexBuffer.cpp
-    src/GameEngineCore/Rendering/OpenGL/VertexArray.cpp
-    src/GameEngineCore/Rendering/OpenGL/IndexBuffer.cpp
+    src/EngineCore/Application.cpp
+    src/EngineCore/Window.cpp
+    src/EngineCore/Rendering/OpenGL/ShaderProgram.cpp
+    src/EngineCore/Rendering/OpenGL/VertexBuffer.cpp
+    src/EngineCore/Rendering/OpenGL/VertexArray.cpp
+    src/EngineCore/Rendering/OpenGL/IndexBuffer.cpp
 )
 
 add_library(

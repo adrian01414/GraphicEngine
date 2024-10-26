@@ -1,8 +1,8 @@
 #include "VertexArray.hpp"
-#include "GameEngineCore/Debug.hpp"
+#include "EngineCore/Debug.hpp"
 #include <glad/glad.h>
 
-namespace GameEngine {
+namespace GraphicsEngine {
     
     VertexArray::VertexArray()
     {

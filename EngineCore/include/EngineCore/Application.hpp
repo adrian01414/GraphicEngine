@@ -1,10 +1,10 @@
 #pragma once
 
-#include "GameEngineCore/Event.hpp"
+#include "EngineCore/Event.hpp"
 
 #include <memory>
 
-namespace GameEngine {
+namespace GraphicsEngine {
     class Application
     {
     public:

@@ -1,8 +1,8 @@
 #include "ShaderProgram.hpp"
-#include "GameEngineCore/Debug.hpp"
+#include "EngineCore/Debug.hpp"
 #include <glad/glad.h>
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     bool create_shader(const char* source, const GLenum shader_type, GLuint& shader_id)
     {

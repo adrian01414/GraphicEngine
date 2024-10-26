@@ -1,8 +1,9 @@
 #pragma once
 
 #include <vector>
+#include <cstdint>
 
-namespace GameEngine {
+namespace GraphicsEngine {
     enum class ShaderDataType
     {
         Float,

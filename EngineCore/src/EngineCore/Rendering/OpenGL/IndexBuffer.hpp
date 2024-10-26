@@ -1,7 +1,7 @@
 #pragma once
 #include "VertexBuffer.hpp"
 
-namespace GameEngine {
+namespace GraphicsEngine {
     class IndexBuffer {
     public:
         IndexBuffer(const void* data, const size_t count, const VertexBuffer::EUsage usage = VertexBuffer::EUsage::Static);

@@ -1,10 +1,10 @@
-#include "GameEngineCore/Application.hpp"
-#include "GameEngineCore/Debug.hpp"
-#include "GameEngineCore/Window.hpp"
+#include "EngineCore/Application.hpp"
+#include "EngineCore/Debug.hpp"
+#include "EngineCore/Window.hpp"
 
 #include <memory>
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     Application::Application()
     {

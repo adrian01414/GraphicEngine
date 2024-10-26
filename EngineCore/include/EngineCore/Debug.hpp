@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-namespace GameEngine{
+namespace GraphicsEngine{
 // перенести в cpp
 #ifdef NDEBUG
 

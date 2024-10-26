@@ -1,13 +1,13 @@
 #pragma once
 
-#include "GameEngineCore/Event.hpp"
+#include "EngineCore/Event.hpp"
 
 #include <string>
 #include <functional>
 
 struct GLFWwindow;
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     class Window
     {

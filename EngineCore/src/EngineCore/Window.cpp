@@ -1,9 +1,9 @@
-#include "GameEngineCore/Window.hpp"
-#include "GameEngineCore/Debug.hpp"
-#include "GameEngineCore/Rendering/OpenGL/ShaderProgram.hpp"
-#include "GameEngineCore/Rendering/OpenGL/VertexBuffer.hpp"
-#include "GameEngineCore/Rendering/OpenGL/VertexArray.hpp"
-#include "GameEngineCore/Rendering/OpenGL/IndexBuffer.hpp"
+#include "EngineCore/Window.hpp"
+#include "EngineCore/Debug.hpp"
+#include "EngineCore/Rendering/OpenGL/ShaderProgram.hpp"
+#include "EngineCore/Rendering/OpenGL/VertexBuffer.hpp"
+#include "EngineCore/Rendering/OpenGL/VertexArray.hpp"
+#include "EngineCore/Rendering/OpenGL/IndexBuffer.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -13,7 +13,7 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 
-namespace GameEngine
+namespace GraphicsEngine
 {
     GLfloat positions_colors2[] = {
         -0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
@@ -171,15 +171,22 @@ namespace GameEngine
         ImGui::NewFrame();
 
         // Square position window
-        ImGui::Begin("Square position");
-        ImGui::SliderFloat2("position1", positions_colors2, -1.0f, 1.0f);
-        ImGui::SliderFloat2("position2", positions_colors2 + 6, -1.0f, 1.0f);
-        ImGui::SliderFloat2("position3", positions_colors2 + 12, -1.0f, 1.0f);
-        ImGui::SliderFloat2("position4", positions_colors2 + 18, -1.0f, 1.0f);
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(200, 150));
+
+        ImGui::Begin("Square position", (bool *)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+        ImGui::SliderFloat2("pos1", positions_colors2, -1.0f, 1.0f);
+        ImGui::SliderFloat2("pos2", positions_colors2 + 6, -1.0f, 1.0f);
+        ImGui::SliderFloat2("pos3", positions_colors2 + 12, -1.0f, 1.0f);
+        ImGui::SliderFloat2("pos4", positions_colors2 + 18, -1.0f, 1.0f);
         ImGui::End();
 
         // Square color window
-        ImGui::Begin("Square color");
+        ImGui::SetNextWindowPos(ImVec2(0, 150));
+        ImGui::SetNextWindowSize(ImVec2(200, 150));
+
+        ImGui::Begin("Square color", (bool *)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
         ImGui::ColorEdit3("color1", positions_colors2 + 3);
         ImGui::ColorEdit3("color2", positions_colors2 + 9);
         ImGui::ColorEdit3("color3", positions_colors2 + 15);
