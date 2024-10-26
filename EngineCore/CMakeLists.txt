@@ -52,6 +52,7 @@ target_link_libraries(
     glad
     spdlog
     imgui
+    glm
 )
 
 set(

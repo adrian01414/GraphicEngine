@@ -1,6 +1,7 @@
 #include "ShaderProgram.hpp"
 #include "EngineCore/Debug.hpp"
 #include <glad/glad.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace GraphicsEngine
 {
@@ -83,6 +84,11 @@ namespace GraphicsEngine
     void ShaderProgram::unbind()
     {
         glUseProgram(0);
+    }
+
+    void ShaderProgram::setMatrix4(const char *name, const glm::mat4 &matrix) const
+    {
+        glUniformMatrix4fv(glGetUniformLocation(m_id, name), 1, GL_FALSE, glm::value_ptr(matrix));
     }
 
     ShaderProgram& ShaderProgram::operator=(ShaderProgram&& shaderProgram)
