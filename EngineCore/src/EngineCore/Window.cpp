@@ -148,6 +148,7 @@ namespace GraphicsEngine
 
         p_vao->add_vertex_buffer(*p_positions_colors_vbo);
         p_vao->set_index_buffer(*p_index_buffer);
+
         return 0;
     }
 
