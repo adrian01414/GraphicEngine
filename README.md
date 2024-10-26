@@ -4,4 +4,4 @@
 - изменение позиций вертексов
 - изменение цветов вертексов
 
-![]([link](./resources/example.gif))
+![hippo]([link]([./resources/example.gif](https://github.com/adrian01414/GraphicsEngine/blob/develop/resources/example.gif)))
