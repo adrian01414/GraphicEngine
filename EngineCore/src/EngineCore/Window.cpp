@@ -13,6 +13,9 @@
 #include <imgui/backends/imgui_impl_opengl3.h>
 #include <imgui/backends/imgui_impl_glfw.h>
 
+#include <glm/mat4x4.hpp>
+#include <glm/trigonometric.hpp>
+
 namespace GraphicsEngine
 {
     GLfloat positions_colors2[] = {
@@ -25,27 +28,31 @@ namespace GraphicsEngine
         0, 1, 2, 3, 2, 1};
 
     const char *vertex_shader =
-        "#version 460\n"
-        "layout(location = 0) in vec3 vertex_position;"
-        "layout(location = 1) in vec3 vertex_color;"
-        "out vec3 color;"
-        "void main() {"
-        "   color = vertex_color;"
-        "   gl_Position = vec4(vertex_position, 1.0);"
-        "}";
+        R"(#version 460
+        layout(location = 0) in vec3 vertex_position;
+        layout(location = 1) in vec3 vertex_color;
+        uniform mat4 model_matrix;
+        out vec3 color;
+        void main() {
+           color = vertex_color;
+           gl_Position = model_matrix * vec4(vertex_position, 1.0);
+        })";
 
     const char *fragment_shader =
-        "#version 460\n"
-        "in vec3 color;"
-        "out vec4 frag_color;"
-        "void main() {"
-        "   frag_color = vec4(color, 1.0);"
-        "}";
+        R"(#version 460
+        in vec3 color;
+        out vec4 frag_color;
+        void main() {
+           frag_color = vec4(color, 1.0);
+        })";
 
     std::unique_ptr<ShaderProgram> p_shader_program;
     std::unique_ptr<VertexBuffer> p_positions_colors_vbo;
     std::unique_ptr<IndexBuffer> p_index_buffer;
     std::unique_ptr<VertexArray> p_vao;
+    float scale[3] = {1.0f, 1.0f, 1.0f};
+    float rotate = 0.f;
+    float position[3] = {0.0f, 0.0f, 0.0f};
 
     static bool s_GLfW_initialized = false;
 
@@ -158,6 +165,26 @@ namespace GraphicsEngine
         glClear(GL_COLOR_BUFFER_BIT);
 
         p_shader_program->bind();
+
+        glm::mat4 scale_matrix(scale[0], 0,        0,        0, 
+                               0,        scale[1], 0,        0, 
+                               0,        0,        scale[2], 0, 
+                               0,        0,        0,        1);
+
+        float rotate_in_radians = glm::radians(rotate);
+        glm::mat4 rotate_matrix(cos(rotate_in_radians),  sin(rotate_in_radians), 0, 0, 
+                               -sin(rotate_in_radians), cos(rotate_in_radians), 0, 0, 
+                               0,                       0,                      1, 0, 
+                               0,                       0,                      0, 1);
+                               
+        glm::mat4 position_matrix(1,           0,           0,           0, 
+                               0,           1,           0,           0, 
+                               0,           0,           1,           0, 
+                               position[0], position[1], position[2], 1);
+
+        glm::mat4 model_matrix = position_matrix * rotate_matrix * scale_matrix;
+        p_shader_program->setMatrix4("model_matrix", model_matrix);
+
         p_vao->bind();
         p_positions_colors_vbo->update_buffer(positions_colors2, sizeof(positions_colors2));
         
@@ -171,27 +198,18 @@ namespace GraphicsEngine
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        // Square position window
-        ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(200, 150));
-
-        ImGui::Begin("Square position", (bool *)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
-
-        ImGui::SliderFloat2("pos1", positions_colors2, -1.0f, 1.0f);
-        ImGui::SliderFloat2("pos2", positions_colors2 + 6, -1.0f, 1.0f);
-        ImGui::SliderFloat2("pos3", positions_colors2 + 12, -1.0f, 1.0f);
-        ImGui::SliderFloat2("pos4", positions_colors2 + 18, -1.0f, 1.0f);
-        ImGui::End();
-
         // Square color window
-        ImGui::SetNextWindowPos(ImVec2(0, 150));
-        ImGui::SetNextWindowSize(ImVec2(200, 150));
+        ImGui::SetNextWindowPos(ImVec2(static_cast<float>(m_data.width) - 250, 0));
+        ImGui::SetNextWindowSize(ImVec2(250, static_cast<float>(m_data.height)));
 
-        ImGui::Begin("Square color", (bool *)0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+        ImGui::Begin("Settings");
         ImGui::ColorEdit3("color1", positions_colors2 + 3);
         ImGui::ColorEdit3("color2", positions_colors2 + 9);
         ImGui::ColorEdit3("color3", positions_colors2 + 15);
         ImGui::ColorEdit3("color4", positions_colors2 + 21);
+        ImGui::SliderFloat3("scale", scale, 0.0f, 2.0f);
+        ImGui::SliderFloat("rotate", &rotate, 0.0f, 360.0f);
+        ImGui::SliderFloat3("position", position, -1.0f, 1.0f);
         ImGui::End();
 
         ImGui::Render();
